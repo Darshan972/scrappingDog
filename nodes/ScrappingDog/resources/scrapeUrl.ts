@@ -1,4 +1,6 @@
+import { request } from 'http';
 import { ResourceDefinition, ScrapeUrlNodeParams, ScrapeUrlParams } from '../types';
+import { countries } from './staticResource';
 
 export const scrapeUrlResource: ResourceDefinition = {
 	displayName: 'Scrape URL',
@@ -10,6 +12,13 @@ export const scrapeUrlResource: ResourceDefinition = {
 			name: 'operation',
 			type: 'options',
 			noDataExpression: true,
+			displayOptions: {
+				show: {
+					resource: [
+						'scrapeUrl',
+					],
+				},
+			},
 			options: [
 				{
 					name: 'Get',
@@ -29,6 +38,13 @@ export const scrapeUrlResource: ResourceDefinition = {
 			default: '',
 			required: true,
 			description: 'The URL you want to scrape',
+			displayOptions: {
+				show: {
+					resource: [
+						'scrapeUrl',
+					],
+				},
+			},
 		},
 		{
 			displayName: 'Javascript Rendering',
@@ -38,6 +54,7 @@ export const scrapeUrlResource: ResourceDefinition = {
 			description: 'You can use this parameter for JS rendering',
 			displayOptions: {
 				show: {
+					resource: ['scrapeUrl'],
 					superProxy: [false],
 				},
 			},
@@ -50,6 +67,7 @@ export const scrapeUrlResource: ResourceDefinition = {
 			description: 'When you want to use the premium residential proxy instead of the normal rotating proxy then you can use this parameter',
 			displayOptions: {
 				show: {
+					resource: ['scrapeUrl'],
 					superProxy: [false],
 				},
 			},
@@ -60,6 +78,13 @@ export const scrapeUrlResource: ResourceDefinition = {
 			type: 'boolean',
 			default: false,
 			description: 'Enable super proxy',
+			displayOptions: {
+				show: {
+					resource: [
+						'scrapeUrl',
+					],
+				},
+			},
 		},
 		{
 			displayName: 'Markdown',
@@ -67,6 +92,13 @@ export const scrapeUrlResource: ResourceDefinition = {
 			type: 'boolean',
 			default: false,
 			description: 'This parameter is used to get HTML data in the markdown format.',
+			displayOptions: {
+				show: {
+					resource: [
+						'scrapeUrl',
+					],
+				},
+			},
 		},
 		{
 			displayName: 'Wait (in ms)',
@@ -76,20 +108,26 @@ export const scrapeUrlResource: ResourceDefinition = {
 			description: 'wait parameter is a time in milliseconds that can be used with the combination of dynamic=true in order to wait and load the website completely.',
 			displayOptions: {
 				show: {
+					resource: ['scrapeUrl'],
 					dynamic: [true],
-				},
+				}
 			},
 		},
 		{
 			displayName: 'Select Country',
 			name: 'country',
-			type: 'string',
-			default: '',
+			type: 'options',
+			default: 'us',
+			options: countries.map(country => ({
+				name: country.name,
+				value: country.value,
+			})),
 			description: 'This parameter helps you access the geotargeting feature.',
 			displayOptions: {
 				show: {
 					premium: [true],
-				},
+					resource: ['scrapeUrl'],
+				}
 			},
 		},
 		{
@@ -98,6 +136,11 @@ export const scrapeUrlResource: ResourceDefinition = {
 			type: 'collection',
 			default: {},
 			placeholder: 'Add Field',
+			displayOptions: {
+				show: {
+					resource: ['scrapeUrl'],
+				},
+			},
 			options: [
 				{
 					displayName: 'AI Query',
@@ -113,36 +156,8 @@ export const scrapeUrlResource: ResourceDefinition = {
 					default: '',
 					description: 'This parameter is used to extract data from pages without parsing the HTML yourself, you can include AI extraction rules in your API request.',
 				},
-			],
+			]
 		},
 	],
 };
 
-export function buildScrapeUrlParams(
-	apiKey: string,
-	params: ScrapeUrlNodeParams
-): ScrapeUrlParams {
-	const {
-		url,
-		dynamic,
-		premium,
-		superProxy,
-		markdown,
-		wait,
-		country,
-		additionalFields,
-	} = params;
-
-	return {
-		api_key: apiKey,
-		url,
-		...(typeof dynamic === 'boolean' && dynamic ? { dynamic: dynamic.toString() } : {}),
-		...(typeof markdown === 'boolean' && markdown ? { markdown: markdown.toString() } : {}),
-		...(typeof premium === 'boolean' && premium ? { premium: premium.toString() } : {}),
-		...(dynamic && wait ? { wait } : {}),
-		...(premium && country ? { country } : {}),
-		...(typeof superProxy === 'boolean' && superProxy ? { superProxy: superProxy.toString() } : {}),
-		...(additionalFields.aiQuery ? { ai_query: additionalFields.aiQuery } : {}),
-		...(additionalFields.aiExtractRules ? { ai_extract_rules: additionalFields.aiExtractRules } : {}),
-	};
-} 

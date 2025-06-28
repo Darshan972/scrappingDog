@@ -1,10 +1,10 @@
-import { ResourceDefinition, GoogleSearchNodeParams, GoogleSearchParams } from '../types';
+import { ResourceDefinition } from '../types';
 import { countries } from './staticResource';
 
-export const googleSearchResource: ResourceDefinition = {
-	displayName: 'Google Search',
-	value: 'googleSearch',
-	description: 'Perform Google searches',
+export const bingSearchResource: ResourceDefinition = {
+	displayName: 'Bing Search',
+	value: 'bingSearch',
+	description: 'Perform Bing searches',
 	operations: [
 		{
 			displayName: 'Operation',
@@ -14,7 +14,7 @@ export const googleSearchResource: ResourceDefinition = {
 			displayOptions: {
 				show: {
 					resource: [
-						'googleSearch',
+						'bingSearch',
 					],
 				},
 			},
@@ -22,8 +22,8 @@ export const googleSearchResource: ResourceDefinition = {
 				{
 					name: 'Search',
 					value: 'search',
-					action: 'Google Search',
-					description: 'Perform a Google Search',
+					action: 'Bing Search',
+					description: 'Perform a Bing Search',
 				},
 			],
 			default: 'search',
@@ -40,21 +40,7 @@ export const googleSearchResource: ResourceDefinition = {
 			displayOptions: {
 				show: {
 					resource: [
-						'googleSearch',
-					],
-				},
-			},
-		},
-		{
-			displayName: 'Advance Search',
-			name: 'advance',
-			type: 'boolean',
-			default: false,
-			description: 'Use this to get advanced featured snippets including Ads, PAA, Knowledge Graphs, etc.',
-			displayOptions: {
-				show: {
-					resource: [
-						'googleSearch',
+						'bingSearch',
 					],
 				},
 			},
@@ -72,25 +58,25 @@ export const googleSearchResource: ResourceDefinition = {
 			displayOptions: {
 				show: {
 					resource: [
-						'googleSearch',
+						'bingSearch',
 					],
 				},
 			},
 		},
 		{
-			displayName: 'Location',
-			name: 'location',
+			displayName: 'Country',
+			name: 'country',
 			type: 'options',
 			default: 'us',
 			options: countries.map(country => ({
 				name: country.name,
 				value: country.value,
 			})),
-			description: 'Location for the search',
+			description: 'Country for the search',
 			displayOptions: {
 				show: {
 					resource: [
-						'googleSearch',
+						'bingSearch',
 					],
 				},
 			},
@@ -108,10 +94,25 @@ export const googleSearchResource: ResourceDefinition = {
 			displayOptions: {
 				show: {
 					resource: [
-						'googleSearch',
+						'bingSearch',
+					],
+				},
+			},
+		},
+		{
+			displayName: 'Filters',
+			name: 'filters',
+			type: 'string',
+			default: '',
+			description: 'This parameter enables advanced filtering options, such as date range filtering (e.g., ez5_18169_18230)',
+			displayOptions: {
+				show: {
+					resource: [
+						'bingSearch',
 					],
 				},
 			},
 		},
 	],
 };
+

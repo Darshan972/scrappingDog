@@ -1,17 +1,24 @@
 import { INodeTypeDescription } from 'n8n-workflow';
-import { scrapeUrlResource, googleSearchResource } from '../resources';
+import {
+	scrapeUrlResource,
+	googleSearchResource,
+	bingSearchResource,
+	linkedInProfileResource,
+	linkedInJobResource,
+	amazonSearchResource,
+} from '../resources';
 
 export function buildNodeDescription(): INodeTypeDescription {
 	return {
-		displayName: 'ScrappingDog',
-		name: 'scrappingDog',
+		displayName: 'ScrapingDog',
+		name: 'scrapingDog',
 		icon: 'file:./scrappingDog.svg',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Get data from ScrappingDog API',
+		description: 'Get data from ScrapingDog API',
 		defaults: {
-			name: 'ScrappingDog',
+			name: 'Scraping Dog API',
 		},
 		properties: [
 			{
@@ -27,6 +34,22 @@ export function buildNodeDescription(): INodeTypeDescription {
 					{
 						name: googleSearchResource.displayName,
 						value: googleSearchResource.value,
+					},
+					{
+						name: bingSearchResource.displayName,
+						value: bingSearchResource.value,
+					},
+					{
+						name: linkedInProfileResource.displayName,
+						value: linkedInProfileResource.value,
+					},
+					{
+						name: linkedInJobResource.displayName,
+						value: linkedInJobResource.value,
+					},
+					{
+						name: amazonSearchResource.displayName,
+						value: amazonSearchResource.value,
 					},
 				],
 				default: scrapeUrlResource.value,
@@ -59,26 +82,70 @@ export function buildNodeDescription(): INodeTypeDescription {
 				options: googleSearchResource.operations[0].options,
 				default: googleSearchResource.operations[0].default,
 			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: [bingSearchResource.value],
+					},
+				},
+				options: bingSearchResource.operations[0].options,
+				default: bingSearchResource.operations[0].default,
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: [linkedInProfileResource.value],
+					},
+				},
+				options: linkedInProfileResource.operations[0].options,
+				default: bingSearchResource.operations[0].default,
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: [linkedInJobResource.value],
+					},
+				},
+				options: linkedInJobResource.operations[0].options,
+				default: linkedInJobResource.operations[0].default,
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: [amazonSearchResource.value],
+					},
+				},
+				options: amazonSearchResource.operations[0].options,
+				default: amazonSearchResource.operations[0].default,
+			},
 			// Scrape URL parameters
-			...scrapeUrlResource.parameters.map((param: any) => ({
-				...param,
-				displayOptions: {
-					show: {
-						resource: [scrapeUrlResource.value],
-					},
-					...param.displayOptions,
-				},
-			})),
+			...scrapeUrlResource.parameters,
 			// Google Search parameters
-			...googleSearchResource.parameters.map((param: any) => ({
-				...param,
-				displayOptions: {
-					show: {
-						resource: [googleSearchResource.value],
-					},
-					...param.displayOptions,
-				},
-			})),
+			...googleSearchResource.parameters,
+			// Bing Search parameters
+			...bingSearchResource.parameters,
+			// LinkedIn Profile parameters
+			...linkedInProfileResource.parameters,
+			// LinkedIn Job parameters
+			...linkedInJobResource.parameters,
+			// Amazon Search parameters
+			...amazonSearchResource.parameters,
 		],
 		inputs: ['main'],
 		outputs: ['main'],
@@ -96,4 +163,4 @@ export function buildNodeDescription(): INodeTypeDescription {
 			},
 		},
 	};
-} 
+}
