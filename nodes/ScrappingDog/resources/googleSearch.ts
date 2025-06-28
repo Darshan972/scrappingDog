@@ -1,4 +1,4 @@
-import { ResourceDefinition, GoogleSearchNodeParams, GoogleSearchParams } from '../types';
+import { ResourceDefinition } from '../types';
 import { countries } from './staticResource';
 
 export const googleSearchResource: ResourceDefinition = {

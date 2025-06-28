@@ -1,5 +1,5 @@
 import { request } from 'http';
-import { ResourceDefinition, ScrapeUrlNodeParams, ScrapeUrlParams } from '../types';
+import { ResourceDefinition} from '../types';
 import { countries } from './staticResource';
 
 export const scrapeUrlResource: ResourceDefinition = {
