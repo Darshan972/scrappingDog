@@ -183,7 +183,7 @@ export const linkedInJobResource: ResourceDefinition = {
             displayName: 'Job Type',
             name: 'job_type', 
             type: 'options',
-            default: 'Full-time',
+            default: 'Full_time',
             description: 'This is the job type to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL',
             options: [
                 {

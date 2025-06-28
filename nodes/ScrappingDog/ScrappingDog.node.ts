@@ -13,7 +13,6 @@ export class ScrappingDog implements INodeType {
 		const credentials = await this.getCredentials('ScrappingDogApi');
 		const apiKey = credentials.apiKey;
 		const resource = this.getNodeParameter('resource', 0) as string;
-		console.log('resource-->', resource);
 		let apiUrl = '';
 		let params = {};
 		switch (resource) {
@@ -32,7 +31,6 @@ export class ScrappingDog implements INodeType {
 				const country = premium ? (this.getNodeParameter('country', 0) as string) : undefined;
 
 				apiUrl = `${process.env.SCRAPPING_DOG_BASE_URL}scrape`;
-				console.log('apiUrl1-->', apiUrl);
 
 				params = {
 					api_key: apiKey.toString(),
@@ -50,7 +48,6 @@ export class ScrappingDog implements INodeType {
 						? { ai_extract_rules: additionalFields.aiExtractRules.toString() }
 						: {}),
 				};
-				console.log('params1-->', params);
 				break;
 			}
 			case 'googleSearch': {
@@ -99,7 +96,6 @@ export class ScrappingDog implements INodeType {
 
 				// Extract identifier by splitting by / and taking the last element
 				const linkId = fullLinkId.split('/').filter(Boolean).pop() || fullLinkId;
-				console.log('linkId-->', linkId);
 				params = {
 					api_key: apiKey.toString(),
 					linkId: linkId.toString(),
@@ -159,7 +155,7 @@ export class ScrappingDog implements INodeType {
 					...(typeof this.getNodeParameter('country', 0) === 'string'
 						? { country: this.getNodeParameter('country', 0)?.toString() }
 						: {}),
-					...(typeof this.getNodeParameter('page', 0) === 'number'
+					...(typeof this.getNodeParameter('page', 0) === 'string'
 						? { page: this.getNodeParameter('page', 0)?.toString() }
 						: {}),
 					...(typeof this.getNodeParameter('domain', 0) === 'string'
@@ -169,7 +165,6 @@ export class ScrappingDog implements INodeType {
 						? { postal_code: this.getNodeParameter('postal_code', 0)?.toString() }
 						: {}),
 				};
-				console.log('params2-->', params);
 				break;
 			}
 			default:
@@ -177,8 +172,6 @@ export class ScrappingDog implements INodeType {
 		}
 
 		try {
-			console.log('params-->', params);
-			console.log('apiUrl-->', apiUrl);
 			const response = await axios.get(apiUrl, {
 				params,
 				headers: {
@@ -188,8 +181,27 @@ export class ScrappingDog implements INodeType {
 			});
 			returnData.push({ json: response.data });
 		} catch (error) {
-			// Optionally, handle errors per item or throw to stop execution
-			throw new Error(`Error scraping URL: ${error}`);
+			// Return error details as part of the output instead of throwing
+			if (axios.isAxiosError(error)) {
+				returnData.push({
+					json: {
+						error: true,
+						message: error.message,
+						status: error.response?.status,
+						statusText: error.response?.statusText,
+						data: error.response?.data,
+						url: error.config?.url,
+						method: error.config?.method,
+					}
+				});
+			} else {
+				returnData.push({
+					json: {
+						error: true,
+						message: error instanceof Error ? error.message : 'Unknown error occurred',
+					}
+				});
+			}
 		}
 
 		return this.prepareOutputData(returnData);
