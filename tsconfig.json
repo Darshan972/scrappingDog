@@ -1,13 +1,20 @@
 {
-    "compilerOptions": {
-      "module": "CommonJS",
-      "target": "ES2019",
-      "lib": ["es2019", "dom"],
-      "outDir": "./dist",
-      "rootDir": "./",
-      "strict": true,
-      "esModuleInterop": true
-    },
-    "include": ["nodes/ScrappingDog/ScrappingDog.node.ts", "credentials/ScrappingDogApi.credentials.ts","nodes/ScrappingDog/ScrappingDog.node.json","nodes/ScrappingDog/scrappingDog.svg"],
-    "exclude": ["node_modules"]
-  }
+	"compilerOptions": {
+		"module": "CommonJS",
+		"target": "ES2019",
+		"lib": ["es2019", "dom"],
+		"outDir": "./dist",
+		"rootDir": "./",
+		"strict": true,
+		"esModuleInterop": true
+	},
+	"include": [
+		"index.ts",
+		"nodes/ScrapingDog/ScrapingDog.node.ts",
+		"credentials/scrapingDogApi.credentials.ts",
+		"nodes/ScrapingDog/ScrapingDog.node.json",
+		"nodes/ScrapingDog/scrappingDog.svg",
+		"nodes/ScrapingDog/utils/nodeDescription.ts"
+	],
+	"exclude": ["node_modules"]
+}

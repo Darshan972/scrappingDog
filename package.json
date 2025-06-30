@@ -1,19 +1,62 @@
 {
-  "name": "scrappingDog",
-  "version": "1.0.0",
-  "description": "A custom node for n8n to scrap data from a website",
+  "name": "n8n-nodes-scraping-dog",
+  "version": "0.1.0",
+  "description": "A custom n8n node for integrating with ScrapingDog to perform web scraping tasks.",
+  "keywords": [
+    "n8n",
+    "n8n-node",
+    "scrapingdog",
+    "web-scraping",
+    "automation",
+    "n8n-community-node-package"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "author": {
+    "name": "Priya Yadav",
+    "email": "priyayadav9591@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PriyaYadav12/scrappingDog.git"
+  },
+  "engines": {
+    "node": ">=20.15"
+  },
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "npx rimraf dist && tsc && gulp build:icons",
+    "dev": "tsc --watch",
+    "format": "prettier nodes credentials --write",
+    "lint": "eslint nodes credentials package.json",
+    "lintfix": "eslint nodes credentials package.json --fix",
+    "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/scrapingDogApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/ScrappingDog/ScrappingDog.node.js"
+    ]
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
-    "@types/node": "^14.14.37",
-    "n8n-workflow": "^0.128.0",
-    "typescript": "^4.2.4"
+    "@types/node": "^24.0.7",
+    "gulp": "^5.0.1",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
   },
   "dependencies": {
-    "dotenv": "^16.5.0",
-    "n8n-core": "^1.14.1"
+    "axios": "^1.10.0",
+    "dotenv": "^17.0.0",
+    "http": "^0.0.1-security"
   }
 }

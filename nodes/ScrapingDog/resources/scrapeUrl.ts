@@ -1,4 +1,3 @@
-import { request } from 'http';
 import { ResourceDefinition} from '../types';
 import { countries } from './staticResource';
 

@@ -5,14 +5,18 @@ import axios from 'axios';
 
 dotenv.config();
 
-export class ScrappingDog implements INodeType {
+export class ScrapingDog implements INodeType {
 	description = buildNodeDescription();
 
 	async execute(this: IExecuteFunctions) {
 		const returnData = [];
-		const credentials = await this.getCredentials('ScrappingDogApi');
+		const credentials = await this.getCredentials('scrapingDogApi');
 		const apiKey = credentials.apiKey;
 		const resource = this.getNodeParameter('resource', 0) as string;
+		
+		// Add base URL as a parameter with default value
+		const baseUrl = this.getNodeParameter('baseUrl', 0, 'https://api.scrapingdog.com/') as string;
+		
 		let apiUrl = '';
 		let params = {};
 		switch (resource) {
@@ -30,7 +34,7 @@ export class ScrappingDog implements INodeType {
 				const wait = dynamic ? (this.getNodeParameter('wait', 0) as number) : undefined;
 				const country = premium ? (this.getNodeParameter('country', 0) as string) : undefined;
 
-				apiUrl = `${process.env.SCRAPPING_DOG_BASE_URL}scrape`;
+				apiUrl = `${baseUrl}scrape`;
 
 				params = {
 					api_key: apiKey.toString(),
@@ -51,7 +55,7 @@ export class ScrappingDog implements INodeType {
 				break;
 			}
 			case 'googleSearch': {
-				apiUrl = `${process.env.SCRAPPING_DOG_BASE_URL}google/`;
+				apiUrl = `${baseUrl}google/`;
 				params = {
 					api_key: apiKey.toString(),
 					query: (this.getNodeParameter('query', 0) as string).toString(),
@@ -71,7 +75,7 @@ export class ScrappingDog implements INodeType {
 				break;
 			}
 			case 'bingSearch': {
-				apiUrl = `${process.env.SCRAPPING_DOG_BASE_URL}bing/search/`;
+				apiUrl = `${baseUrl}bing/search/`;
 				params = {
 					api_key: apiKey.toString(),
 					query: (this.getNodeParameter('query', 0) as string).toString(),
@@ -91,7 +95,7 @@ export class ScrappingDog implements INodeType {
 				break;
 			}
 			case 'linkedInProfile': {
-				apiUrl = `${process.env.SCRAPPING_DOG_BASE_URL}linkedin/`;
+				apiUrl = `${baseUrl}linkedin/`;
 				const fullLinkId = this.getNodeParameter('linkId', 0) as string;
 
 				// Extract identifier by splitting by / and taking the last element
@@ -109,7 +113,7 @@ export class ScrappingDog implements INodeType {
 				break;
 			}
 			case 'linkedInJob': {
-				apiUrl = `${process.env.SCRAPPING_DOG_BASE_URL}linkedinjobs/`;
+				apiUrl = `${baseUrl}linkedinjobs/`;
 
 				const type = this.getNodeParameter('type', 0)?.toString();
 
@@ -147,7 +151,7 @@ export class ScrappingDog implements INodeType {
 				break;
 			}
 			case 'amazonSearch': {
-				apiUrl = `${process.env.SCRAPPING_DOG_BASE_URL}amazon/search`;
+				apiUrl = `${baseUrl}amazon/search`;
 				console.log('apiUrl2-->', apiUrl);
 				params = {
 					api_key: apiKey.toString(),

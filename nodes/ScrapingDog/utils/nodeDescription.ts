@@ -9,6 +9,7 @@ import {
 } from '../resources';
 
 export function buildNodeDescription(): INodeTypeDescription {
+	const baseUrl = "https://api.scrapingdog.com/";
 	return {
 		displayName: 'ScrapingDog',
 		name: 'scrapingDog',
@@ -106,7 +107,7 @@ export function buildNodeDescription(): INodeTypeDescription {
 					},
 				},
 				options: linkedInProfileResource.operations[0].options,
-				default: bingSearchResource.operations[0].default,
+				default: linkedInProfileResource.operations[0].default,
 			},
 			{
 				displayName: 'Operation',
@@ -151,12 +152,12 @@ export function buildNodeDescription(): INodeTypeDescription {
 		outputs: ['main'],
 		credentials: [
 			{
-				name: 'ScrappingDogApi',
+				name: 'scrapingDogApi',
 				required: true,
 			},
 		],
 		requestDefaults: {
-			baseURL: process.env.SCRAPPING_DOG_BASE_URL,
+			baseURL: baseUrl,
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',

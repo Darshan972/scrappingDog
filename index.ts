@@ -1,6 +1,6 @@
 import { INodeType } from 'n8n-workflow';
-import { ScrappingDog } from './nodes/ScrappingDog/ScrappingDog.node';
+import { ScrapingDog } from './nodes/ScrapingDog/ScrapingDog.node';
 
 export const nodeTypes: INodeType[] = [
-  new ScrappingDog(),
+  new ScrapingDog(),
 ];

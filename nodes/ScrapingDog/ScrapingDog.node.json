@@ -1,5 +1,5 @@
 {
-	"node": "n8n-nodes-base.ScrappingDog",
+	"node": "n8n-nodes-base.ScrapingDog",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
 	"categories": [
