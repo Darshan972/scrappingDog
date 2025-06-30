@@ -1,4 +1,4 @@
-import { INodeTypeDescription } from 'n8n-workflow';
+import { INodeTypeDescription, NodeConnectionType } from 'n8n-workflow';
 import {
 	scrapeUrlResource,
 	googleSearchResource,
@@ -148,8 +148,8 @@ export function buildNodeDescription(): INodeTypeDescription {
 			// Amazon Search parameters
 			...amazonSearchResource.parameters,
 		],
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionType.Main],
+		outputs: [NodeConnectionType.Main],
 		credentials: [
 			{
 				name: 'scrapingDogApi',

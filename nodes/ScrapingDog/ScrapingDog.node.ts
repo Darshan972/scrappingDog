@@ -1,7 +1,6 @@
-import { INodeType, IExecuteFunctions } from 'n8n-workflow';
+import { INodeType, IExecuteFunctions, NodeApiError } from 'n8n-workflow';
 import dotenv from 'dotenv';
 import { buildNodeDescription } from './utils';
-import axios from 'axios';
 
 dotenv.config();
 
@@ -176,26 +175,53 @@ export class ScrapingDog implements INodeType {
 		}
 
 		try {
-			const response = await axios.get(apiUrl, {
-				params,
+			// Build URL with query parameters
+			const url = new URL(apiUrl);
+			Object.entries(params).forEach(([key, value]) => {
+				url.searchParams.append(key, value as string);
+			});
+
+			const response = await fetch(url.toString(), {
+				method: 'GET',
 				headers: {
-					Accept: 'application/json',
+					'Accept': 'text/html,application/json',
 					'Content-Type': 'application/json',
 				},
 			});
-			returnData.push({ json: response.data });
+
+			if (!response.ok) {
+				throw new NodeApiError(this.getNode(), {
+					message: `HTTP error! status: ${response.status} ${response.statusText}`,
+					httpCode: response.status,
+					description: response.statusText,
+				});
+			}
+
+			// For scrapeUrl, we expect HTML content
+			if (resource === 'scrapeUrl') {
+				const htmlContent = await response.text();
+				returnData.push({ 
+					json: { 
+						html: htmlContent,
+						url: url.toString(),
+						status: response.status,
+						contentType: response.headers.get('content-type')
+					} 
+				});
+			} else {
+				// For other resources, expect JSON
+				const data = await response.json();
+				returnData.push({ json: data });
+			}
 		} catch (error) {
 			// Return error details as part of the output instead of throwing
-			if (axios.isAxiosError(error)) {
+			if (error instanceof NodeApiError) {
 				returnData.push({
 					json: {
 						error: true,
 						message: error.message,
-						status: error.response?.status,
-						statusText: error.response?.statusText,
-						data: error.response?.data,
-						url: error.config?.url,
-						method: error.config?.method,
+						status: error.httpCode,
+						statusText: error.description,
 					}
 				});
 			} else {
