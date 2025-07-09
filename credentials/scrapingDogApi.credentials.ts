@@ -1,5 +1,6 @@
 import {
 	IAuthenticateGeneric,
+	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
 } from 'n8n-workflow';
@@ -21,13 +22,25 @@ export class scrapingDogApi implements ICredentialType {
 			},
 		},
 	];
-	authenticate = {
+	authenticate :IAuthenticateGeneric = {
 		type: 'generic',
 		properties: {
 			qs: {
 				'api_key': '={{$credentials.apiKey}}'
 			}
 		},
-	} as IAuthenticateGeneric;
+	};
+
+	// Credential test block
+	test: ICredentialTestRequest = {
+		request: {
+			method: 'GET',
+			url: 'https://api.scrapingdog.com/scrape',
+			qs: {
+				api_key: '={{$credentials.apiKey}}',
+				url: 'https://httpbin.org/get',
+			},
+		},
+	};
 	
 }
