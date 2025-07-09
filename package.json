@@ -13,12 +13,12 @@
   "license": "MIT",
   "homepage": "",
   "author": {
-    "name": "Priya Yadav",
-    "email": "priyayadav9591@gmail.com"
+    "name": "Darshan Khandelwal",
+    "email": "darshankhandelwal12@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/PriyaYadav12/scrappingDog.git"
+    "url": "https://github.com/Darshan972/scrappingDog.git"
   },
   "engines": {
     "node": ">=20.15"
