@@ -1,6 +1,5 @@
 .DS_Store
 *.tsbuildinfo
-dist
 node_modules
 .vscode
 .gitignore

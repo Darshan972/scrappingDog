@@ -1,8 +1,5 @@
 import { INodeType, IExecuteFunctions, NodeApiError } from 'n8n-workflow';
-import dotenv from 'dotenv';
 import { buildNodeDescription } from './utils';
-
-dotenv.config();
 
 export class ScrapingDog implements INodeType {
 	description = buildNodeDescription();
