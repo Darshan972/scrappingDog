@@ -41,7 +41,7 @@
       "dist/credentials/scrapingDogApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/ScrappingDog/ScrappingDog.node.js"
+      "dist/nodes/ScrapingDog/ScrapingDog.node.js"
     ]
   },
   "devDependencies": {
