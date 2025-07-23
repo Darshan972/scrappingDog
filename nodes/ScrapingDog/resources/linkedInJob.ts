@@ -22,7 +22,7 @@ export const linkedInJobResource: ResourceDefinition = {
 				{
 					name: 'Search',
 					value: 'search',
-					action: 'LinkedIn Job',
+					action: 'Linked in job',
 					description: 'Perform a LinkedIn Job Search',
 				},
 			],
@@ -60,7 +60,7 @@ export const linkedInJobResource: ResourceDefinition = {
 			name: 'job_id',
 			type: 'string',
 			default: '',
-			description: 'This is the ID of the job. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL',
+			description: 'This is the ID of the job. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL.',
 			displayOptions: {
 				show: {
 					resource: [
@@ -77,7 +77,7 @@ export const linkedInJobResource: ResourceDefinition = {
 			name: 'field',
 			type: 'string',
 			default: '',
-			description: 'This is the field of the job to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL',
+			description: 'This is the field of the job to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL.',
 			displayOptions: {
 				show: {
 					resource: [
@@ -90,11 +90,10 @@ export const linkedInJobResource: ResourceDefinition = {
 			},
 		},
         {
-			displayName: 'Geo Id',
+			displayName: 'Geo ID',
 			name: 'geoid',
 			type: 'string',
 			default: '',
-			description: '',
 			displayOptions: {
 				show: {
 					resource: [
@@ -110,12 +109,12 @@ export const linkedInJobResource: ResourceDefinition = {
             displayName: 'Location',
             name: 'location',
             type: 'options',
-            default: 'us',
+            default: '',
             options: countries.map(country => ({
                 name: country.name,
                 value: country.value,
             })),
-            description: 'This is the location of the job to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL',
+            description: 'This is the location of the job to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL.',
             displayOptions: {
                 show: {
                     resource: [
@@ -131,12 +130,12 @@ export const linkedInJobResource: ResourceDefinition = {
             displayName: 'Page',
             name: 'page',
             type: 'options',
-            default: '1',
+            default: '',
             options: Array.from({ length: 10 }, (_, i) => ({
                 name: `${i + 1}`,
                 value: `${i + 1}`,
             })),
-            description: 'This is the page number of the job to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL',
+            description: 'This is the page number of the job to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL.',
             displayOptions: {
                 show: {
                     resource: [
@@ -153,7 +152,7 @@ export const linkedInJobResource: ResourceDefinition = {
             name: 'sort_by',
             type: 'options',
             default: 'Day',
-            description: 'This is the sort by of the job to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL',
+            description: 'This is the sort by of the job to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL.',
             options: [
                 {
                     name: 'Day',
@@ -184,19 +183,19 @@ export const linkedInJobResource: ResourceDefinition = {
             name: 'job_type', 
             type: 'options',
             default: 'Full_time',
-            description: 'This is the job type to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL',
+            description: 'This is the job type to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL.',
             options: [
-                {
-                    name: 'Full-time',
-                    value: 'Full_time',
-                },
-                {
-                    name: 'Part-time',
-                    value: 'Part_time',
-                },
                 {
                     name: 'Contract',
                     value: 'Contract',
+                },
+                {
+                    name: 'Full-Time',
+                    value: 'Full_time',
+                },
+                {
+                    name: 'Part-Time',
+                    value: 'Part_time',
                 },
                 {
                     name: 'Temporary',
@@ -206,7 +205,6 @@ export const linkedInJobResource: ResourceDefinition = {
                     name: 'Volunteer',
                     value: 'volunteer',
                 },
-                
             ],
             displayOptions: {
                 show: {
@@ -224,8 +222,16 @@ export const linkedInJobResource: ResourceDefinition = {
             name: 'exp_level',
             type: 'options',
             default: 'entry_level',
-            description: 'This is the experience level to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL',
+            description: 'This is the experience level to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL.',
             options: [
+                {
+                    name: 'Associate',
+                    value: 'associate',
+                },
+                {
+                    name: 'Director',
+                    value: 'director',
+                },
                 {
                     name: 'Entry Level',
                     value: 'entry_level',
@@ -235,16 +241,8 @@ export const linkedInJobResource: ResourceDefinition = {
                     value: 'internship',
                 },
                 {
-                    name: 'Associate',
-                    value: 'associate',
-                },
-                {
                     name: 'Mid Senior Level',
                     value: 'mid_senior_level',
-                },
-                {
-                    name: 'Director',
-                    value: 'director',
                 }
             ],
             displayOptions: {
@@ -263,7 +261,7 @@ export const linkedInJobResource: ResourceDefinition = {
             name: 'work_type',
             type: 'options',
             default: 'at_work',
-            description: 'This is the work type to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL',
+            description: 'This is the work type to scrape. This can be found through our LinkedIn Jobs Scraper or from the LinkedIn Job URL.',
             options: [
                 {
                     name: 'At Work',

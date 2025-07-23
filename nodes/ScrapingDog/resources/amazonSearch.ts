@@ -22,7 +22,7 @@ export const amazonSearchResource: ResourceDefinition = {
 				{
 					name: 'Search',
 					value: 'search',
-					action: 'Amazon Search',
+					action: 'Amazon search',
 					description: 'Perform a Amazon Search',
 				},
 			],
@@ -49,7 +49,7 @@ export const amazonSearchResource: ResourceDefinition = {
 			displayName: 'Page',
 			name: 'page',
 			type: 'options',
-			default: "1",
+			default: '',
 			options: Array.from({ length: 10 }, (_, i) => ({
 				name: `${i + 1}`,
 				value:`${i + 1}`
@@ -67,7 +67,7 @@ export const amazonSearchResource: ResourceDefinition = {
 			displayName: 'Amazon Domain',
 			name: 'domain',
 			type: 'options',
-			default: 'com',
+			default: '',
 			options: amazonDomains.map(domain => ({
 				name: `${domain}`,
 				value: domain
@@ -86,7 +86,7 @@ export const amazonSearchResource: ResourceDefinition = {
 			displayName: 'Country',
 			name: 'country',
 			type: 'options',
-			default: 'us',
+			default: '',
 			options: countries.map(country => ({
 				name: country.name,
 				value: country.value,

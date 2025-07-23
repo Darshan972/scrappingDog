@@ -21,7 +21,7 @@ export const linkedInProfileResource: ResourceDefinition = {
 				{
 					name: 'Search',
 					value: 'search',
-					action: 'LinkedIn Profile',
+					action: 'Linked in profile',
 					description: 'Perform a LinkedIn Profile Search',
 				},
 			],
@@ -49,7 +49,7 @@ export const linkedInProfileResource: ResourceDefinition = {
 			name: 'private',
 			type: 'boolean',
 			default: false,
-			description: 'Set to true if the profile is private',
+			description: 'Whether the profile is private',
 			displayOptions: {
 				show: {
 					resource: [

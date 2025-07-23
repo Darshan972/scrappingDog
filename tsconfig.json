@@ -18,11 +18,10 @@
 	},
 	"include": [
 		"index.ts",
-		"nodes/ScrapingDog/ScrapingDog.node.ts",
-		"credentials/scrapingDogApi.credentials.ts",
-		"nodes/ScrapingDog/ScrapingDog.node.json",
-		"nodes/ScrapingDog/scrappingDog.svg",
-		"nodes/ScrapingDog/utils/nodeDescription.ts"
+		"credentials/**/*",
+		"nodes/**/*",
+		"nodes/**/*.json",
+		"package.json",
 	],
 	"exclude": ["node_modules", "dist"]
 }

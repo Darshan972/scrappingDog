@@ -1,236 +1,255 @@
-import { INodeType, IExecuteFunctions, NodeApiError } from 'n8n-workflow';
-import { buildNodeDescription } from './utils';
+import {
+	INodeType,
+	INodeTypeDescription,
+	NodeConnectionType,
+} from 'n8n-workflow';
+
+import {
+	scrapeUrlResource,
+	googleSearchResource,
+	bingSearchResource,
+	linkedInProfileResource,
+	linkedInJobResource,
+	amazonSearchResource,
+} from './resources';
 
 export class ScrapingDog implements INodeType {
-	description = buildNodeDescription();
-
-	async execute(this: IExecuteFunctions) {
-		const returnData = [];
-		const credentials = await this.getCredentials('scrapingDogApi');
-		const apiKey = credentials.apiKey;
-		const resource = this.getNodeParameter('resource', 0) as string;
-		
-		// Add base URL as a parameter with default value
-		const baseUrl = this.getNodeParameter('baseUrl', 0, 'https://api.scrapingdog.com/') as string;
-		
-		let apiUrl = '';
-		let params = {};
-		switch (resource) {
-			case 'scrapeUrl': {
-				const dynamic = this.getNodeParameter('dynamic', 0) as boolean;
-				const premium = this.getNodeParameter('premium', 0) as boolean;
-				const superProxy = this.getNodeParameter('superProxy', 0) as boolean;
-				const markdown = this.getNodeParameter('markdown', 0) as boolean;
-				const url = this.getNodeParameter('url', 0) as string;
-				const additionalFields = this.getNodeParameter('additionalFields', 0) as {
-					aiQuery?: string;
-					aiExtractRules?: string;
-				};
-
-				const wait = dynamic ? (this.getNodeParameter('wait', 0) as number) : undefined;
-				const country = premium ? (this.getNodeParameter('country', 0) as string) : undefined;
-
-				apiUrl = `${baseUrl}scrape`;
-
-				params = {
-					api_key: apiKey.toString(),
-					url: url.toString(),
-					...(typeof dynamic === 'boolean' && dynamic ? { dynamic: dynamic.toString() } : {}),
-					...(typeof markdown === 'boolean' && markdown ? { markdown: markdown.toString() } : {}),
-					...(typeof premium === 'boolean' && premium ? { premium: premium.toString() } : {}),
-					...(dynamic && wait ? { wait: wait.toString() } : {}),
-					...(premium && country ? { country: country.toString() } : {}),
-					...(typeof superProxy === 'boolean' && superProxy
-						? { superProxy: superProxy.toString() }
-						: {}),
-					...(additionalFields.aiQuery ? { ai_query: additionalFields.aiQuery.toString() } : {}),
-					...(additionalFields.aiExtractRules
-						? { ai_extract_rules: additionalFields.aiExtractRules.toString() }
-						: {}),
-				};
-				break;
-			}
-			case 'googleSearch': {
-				apiUrl = `${baseUrl}google/`;
-				params = {
-					api_key: apiKey.toString(),
-					query: (this.getNodeParameter('query', 0) as string).toString(),
-					...(typeof this.getNodeParameter('advance', 0) === 'boolean'
-						? { advance_search: this.getNodeParameter('advance', 0)?.toString() }
-						: {}),
-					...(typeof this.getNodeParameter('page', 0) === 'number'
-						? { page: this.getNodeParameter('page', 0)?.toString() }
-						: {}),
-					...(typeof this.getNodeParameter('location', 0) === 'string'
-						? { country: this.getNodeParameter('location', 0)?.toString() }
-						: {}),
-					...(typeof this.getNodeParameter('results', 0) === 'number'
-						? { results: this.getNodeParameter('results', 0)?.toString() }
-						: {}),
-				};
-				break;
-			}
-			case 'bingSearch': {
-				apiUrl = `${baseUrl}bing/search/`;
-				params = {
-					api_key: apiKey.toString(),
-					query: (this.getNodeParameter('query', 0) as string).toString(),
-					...(typeof this.getNodeParameter('page', 0) === 'number'
-						? { page: this.getNodeParameter('page', 0)?.toString() }
-						: {}),
-					...(typeof this.getNodeParameter('country', 0) === 'string'
-						? { country: this.getNodeParameter('country', 0)?.toString() }
-						: {}),
-					...(typeof this.getNodeParameter('filters', 0) === 'string'
-						? { filters: this.getNodeParameter('filters', 0).toString() }
-						: {}),
-					...(typeof this.getNodeParameter('results', 0) === 'number'
-						? { results: this.getNodeParameter('results', 0)?.toString() }
-						: {}),
-				};
-				break;
-			}
-			case 'linkedInProfile': {
-				apiUrl = `${baseUrl}linkedin/`;
-				const fullLinkId = this.getNodeParameter('linkId', 0) as string;
-
-				// Extract identifier by splitting by / and taking the last element
-				const linkId = fullLinkId.split('/').filter(Boolean).pop() || fullLinkId;
-				params = {
-					api_key: apiKey.toString(),
-					linkId: linkId.toString(),
-					...(this.getNodeParameter('private', 0, false) !== undefined
-						? { private: this.getNodeParameter('private', 0, false)?.toString() }
-						: {}),
-					...(typeof this.getNodeParameter('type', 0) === 'string'
-						? { type: this.getNodeParameter('type', 0)?.toString() }
-						: {}),
-				};
-				break;
-			}
-			case 'linkedInJob': {
-				apiUrl = `${baseUrl}linkedinjobs/`;
-
-				const type = this.getNodeParameter('type', 0)?.toString();
-
-				params = {
-					api_key: apiKey.toString(),
-					...(type === 'job_overview' && this.getNodeParameter('job_id', 0) !== undefined
-						? { job_id: this.getNodeParameter('job_id', 0)?.toString() }
-						: {}),
-					...(type === 'job_listings' && this.getNodeParameter('field', 0) !== undefined
-						? { field: this.getNodeParameter('field', 0)?.toString() }
-						: {}),
-					...(type === 'job_listings' && this.getNodeParameter('geoid', 0) !== undefined
-						? { geoid: this.getNodeParameter('geoid', 0)?.toString() }
-						: {}),
-					...(type === 'job_listings' && this.getNodeParameter('location', 0) !== undefined
-						? { location: this.getNodeParameter('location', 0)?.toString() }
-						: {}),
-					...(type === 'job_listings' && this.getNodeParameter('page', 0) !== undefined
-						? { page: this.getNodeParameter('page', 0)?.toString() }
-						: {}),
-					...(type === 'job_listings' && this.getNodeParameter('sort_by', 0) !== undefined
-						? { sort_by: this.getNodeParameter('sort_by', 0)?.toString() }
-						: {}),
-					...(type === 'job_listings' && this.getNodeParameter('job_type', 0) !== undefined
-						? { job_type: this.getNodeParameter('job_type', 0)?.toString() }
-						: {}),
-					...(type === 'job_listings' && this.getNodeParameter('exp_level', 0) !== undefined
-						? { exp_level: this.getNodeParameter('exp_level', 0)?.toString() }
-						: {}),
-					...(type === 'job_listings' && this.getNodeParameter('work_type', 0) !== undefined
-						? { work_type: this.getNodeParameter('work_type', 0)?.toString() }
-						: {}),
-				};
-
-				break;
-			}
-			case 'amazonSearch': {
-				apiUrl = `${baseUrl}amazon/search`;
-				console.log('apiUrl2-->', apiUrl);
-				params = {
-					api_key: apiKey.toString(),
-					query: (this.getNodeParameter('query', 0) as string).toString(),
-					...(typeof this.getNodeParameter('country', 0) === 'string'
-						? { country: this.getNodeParameter('country', 0)?.toString() }
-						: {}),
-					...(typeof this.getNodeParameter('page', 0) === 'string'
-						? { page: this.getNodeParameter('page', 0)?.toString() }
-						: {}),
-					...(typeof this.getNodeParameter('domain', 0) === 'string'
-						? { domain: this.getNodeParameter('domain', 0)?.toString() }
-						: {}),
-					...(typeof this.getNodeParameter('postal_code', 0) === 'string'
-						? { postal_code: this.getNodeParameter('postal_code', 0)?.toString() }
-						: {}),
-				};
-				break;
-			}
-			default:
-				break;
-		}
-
-		try {
-			// Build URL with query parameters
-			const url = new URL(apiUrl);
-			Object.entries(params).forEach(([key, value]) => {
-				url.searchParams.append(key, value as string);
-			});
-
-			const response = await fetch(url.toString(), {
-				method: 'GET',
-				headers: {
-					'Accept': 'text/html,application/json',
-					'Content-Type': 'application/json',
+	description: INodeTypeDescription = {
+		displayName: 'ScrapingDog',
+		name: 'scrapingDog',
+		icon: 'file:scrappingDog.svg',
+		group: ['transform'],
+		version: 1,
+		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
+		description: 'Get data from ScrapingDog API',
+		defaults: {
+			name: 'Scraping Dog API',
+		},
+		inputs: [NodeConnectionType.Main],
+		outputs: [NodeConnectionType.Main],
+		credentials: [
+			{
+				name: 'scrapingDogApi',
+				required: true,
+			},
+		],
+		requestDefaults: {
+			baseURL: 'https://api.scrapingdog.com/',
+			headers: {
+				Accept: 'text/html,application/json',
+				'Content-Type': 'application/json',
+			},
+		},
+		properties: [
+			{
+				displayName: 'Resource',
+				name: 'resource',
+				type: 'options',
+				noDataExpression: true,
+				default: '',
+				options: [
+					{
+						name: scrapeUrlResource.displayName,
+						value: scrapeUrlResource.value,
+					},
+					{
+						name: googleSearchResource.displayName,
+						value: googleSearchResource.value,
+					},
+					{
+						name: bingSearchResource.displayName,
+						value: bingSearchResource.value,
+					},
+					{
+						name: linkedInProfileResource.displayName,
+						value: linkedInProfileResource.value,
+					},
+					{
+						name: linkedInJobResource.displayName,
+						value: linkedInJobResource.value,
+					},
+					{
+						name: amazonSearchResource.displayName,
+						value: amazonSearchResource.value,
+					},
+				],
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: '',
+				displayOptions: {
+					show: {
+						resource: [scrapeUrlResource.value],
+					},
 				},
-			});
-
-			if (!response.ok) {
-				throw new NodeApiError(this.getNode(), {
-					message: `HTTP error! status: ${response.status} ${response.statusText}`,
-					httpCode: response.status,
-					description: response.statusText,
-				});
-			}
-
-			// For scrapeUrl, we expect HTML content
-			if (resource === 'scrapeUrl') {
-				const htmlContent = await response.text();
-				returnData.push({ 
-					json: { 
-						html: htmlContent,
-						url: url.toString(),
-						status: response.status,
-						contentType: response.headers.get('content-type')
-					} 
-				});
-			} else {
-				// For other resources, expect JSON
-				const data = await response.json();
-				returnData.push({ json: data });
-			}
-		} catch (error) {
-			// Return error details as part of the output instead of throwing
-			if (error instanceof NodeApiError) {
-				returnData.push({
-					json: {
-						error: true,
-						message: error.message,
-						status: error.httpCode,
-						statusText: error.description,
-					}
-				});
-			} else {
-				returnData.push({
-					json: {
-						error: true,
-						message: error instanceof Error ? error.message : 'Unknown error occurred',
-					}
-				});
-			}
-		}
-
-		return this.prepareOutputData(returnData);
-	}
+				options: scrapeUrlResource.operations[0].options,
+				routing: {
+					request: {
+						method: 'GET',
+						url: 'scrape',
+						qs: {
+							api_key: '={{$credentials.apiKey}}',
+							url: '={{$parameter["url"]}}',
+							dynamic: '={{$parameter["dynamic"]}}',
+							markdown: '={{$parameter["markdown"]}}',
+							premium: '={{$parameter["premium"]}}',
+							wait: '={{$parameter["wait"]}}',
+							country: '={{$parameter["country"]}}',
+							superProxy: '={{$parameter["superProxy"]}}',
+							ai_query: '={{$parameter.additionalFields?.aiQuery}}',
+							ai_extract_rules: '={{$parameter.additionalFields?.aiExtractRules}}',
+						},
+						returnFullResponse: true,
+					},
+				},
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: '',
+				displayOptions: {
+					show: {
+						resource: [googleSearchResource.value],
+					},
+				},
+				options: googleSearchResource.operations[0].options,
+				routing: {
+					request: {
+						method: 'GET',
+						url: 'google',
+						qs: {
+							api_key: '={{$credentials.apiKey}}',
+							query: '={{$parameter["query"]}}',
+							advance_search: '={{$parameter["advance"]}}',
+							page: '={{$parameter["page"]}}',
+							country: '={{$parameter["location"]}}',
+							results: '={{$parameter["results"]}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: '',
+				displayOptions: {
+					show: {
+						resource: [bingSearchResource.value],
+					},
+				},
+				options: bingSearchResource.operations[0].options,
+				routing: {
+					request: {
+						method: 'GET',
+						url: 'bing/search',
+						qs: {
+							api_key: '={{$credentials.apiKey}}',
+							query: '={{$parameter["query"]}}',
+							page: '={{$parameter["page"]}}',
+							country: '={{$parameter["country"]}}',
+							filters: '={{$parameter["filters"]}}',
+							results: '={{$parameter["results"]}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: '',
+				displayOptions: {
+					show: {
+						resource: [linkedInProfileResource.value],
+					},
+				},
+				options: linkedInProfileResource.operations[0].options,
+				routing: {
+					request: {
+						method: 'GET',
+						url: 'linkedin',
+						qs: {
+							api_key: '={{$credentials.apiKey}}',
+							linkId: '={{$parameter["linkId"].split("/").filter(Boolean).pop() || $parameter["linkId"]}}',
+							private: '={{$parameter["private"]}}',
+							type: '={{$parameter["type"]}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: '',
+				displayOptions: {
+					show: {
+						resource: [linkedInJobResource.value],
+					},
+				},
+				options: linkedInJobResource.operations[0].options,
+				routing: {
+					request: {
+						method: 'GET',
+						url: 'linkedinjobs',
+						qs: {
+							api_key: '={{$credentials.apiKey}}',
+							job_id: '={{$parameter["type"] === "job_overview" ? $parameter["job_id"] : undefined}}',
+							field: '={{$parameter["type"] === "job_listings" ? $parameter["field"] : undefined}}',
+							geoid: '={{$parameter["type"] === "job_listings" ? $parameter["geoid"] : undefined}}',
+							location: '={{$parameter["type"] === "job_listings" ? $parameter["location"] : undefined}}',
+							page: '={{$parameter["type"] === "job_listings" ? $parameter["page"] : undefined}}',
+							sort_by: '={{$parameter["type"] === "job_listings" ? $parameter["sort_by"] : undefined}}',
+							job_type: '={{$parameter["type"] === "job_listings" ? $parameter["job_type"] : undefined}}',
+							exp_level: '={{$parameter["type"] === "job_listings" ? $parameter["exp_level"] : undefined}}',
+							work_type: '={{$parameter["type"] === "job_listings" ? $parameter["work_type"] : undefined}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: '',
+				displayOptions: {
+					show: {
+						resource: [amazonSearchResource.value],
+					},
+				},
+				options: amazonSearchResource.operations[0].options,
+				routing: {
+					request: {
+						method: 'GET',
+						url: 'amazon/search',
+						qs: {
+							api_key: '={{$credentials.apiKey}}',
+							query: '={{$parameter["query"]}}',
+							country: '={{$parameter["country"]}}',
+							page: '={{$parameter["page"]}}',
+							domain: '={{$parameter["domain"]}}',
+							postal_code: '={{$parameter["postal_code"]}}',
+						},
+					},
+				},
+			},
+			// Parameters from resources
+			...scrapeUrlResource.parameters,
+			...googleSearchResource.parameters,
+			...bingSearchResource.parameters,
+			...linkedInProfileResource.parameters,
+			...linkedInJobResource.parameters,
+			...amazonSearchResource.parameters,
+		],
+	};
 }

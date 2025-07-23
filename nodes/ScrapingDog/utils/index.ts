@@ -1,1 +1,0 @@
-export { buildNodeDescription } from './nodeDescription'; 

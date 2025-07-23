@@ -22,7 +22,7 @@ export const bingSearchResource: ResourceDefinition = {
 				{
 					name: 'Search',
 					value: 'search',
-					action: 'Bing Search',
+					action: 'Bing search',
 					description: 'Perform a Bing Search',
 				},
 			],
@@ -49,7 +49,7 @@ export const bingSearchResource: ResourceDefinition = {
 			displayName: 'Page',
 			name: 'page',
 			type: 'options',
-			default: '1',
+			default: '',
 			options: Array.from({ length: 10 }, (_, i) => ({
 				name: `${i + 1}`,
 				value: `${i + 1}`,
@@ -67,7 +67,7 @@ export const bingSearchResource: ResourceDefinition = {
 			displayName: 'Country',
 			name: 'country',
 			type: 'options',
-			default: 'us',
+			default: '',
 			options: countries.map(country => ({
 				name: country.name,
 				value: country.value,
@@ -85,7 +85,7 @@ export const bingSearchResource: ResourceDefinition = {
 			displayName: 'Results',
 			name: 'results',
 			type: 'options',
-			default: '10',
+			default: '',
 			options: Array.from({ length: 10 }, (_, i) => ({
 				name: `${(i + 1) * 10}`,
 				value: `${(i + 1) * 10}`,

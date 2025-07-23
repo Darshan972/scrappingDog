@@ -22,7 +22,7 @@ export const googleSearchResource: ResourceDefinition = {
 				{
 					name: 'Search',
 					value: 'search',
-					action: 'Google Search',
+					action: 'Google search',
 					description: 'Perform a Google Search',
 				},
 			],
@@ -50,7 +50,7 @@ export const googleSearchResource: ResourceDefinition = {
 			name: 'advance',
 			type: 'boolean',
 			default: false,
-			description: 'Use this to get advanced featured snippets including Ads, PAA, Knowledge Graphs, etc.',
+			description: 'Whether to get advanced featured snippets including Ads, PAA, Knowledge Graphs, etc',
 			displayOptions: {
 				show: {
 					resource: [
@@ -63,7 +63,7 @@ export const googleSearchResource: ResourceDefinition = {
 			displayName: 'Page',
 			name: 'page',
 			type: 'options',
-			default: '1',
+			default: '',
 			options: Array.from({ length: 10 }, (_, i) => ({
 				name: `${i + 1}`,
 				value: `${i + 1}`,
@@ -81,7 +81,7 @@ export const googleSearchResource: ResourceDefinition = {
 			displayName: 'Location',
 			name: 'location',
 			type: 'options',
-			default: 'us',
+			default: '',
 			options: countries.map(country => ({
 				name: country.name,
 				value: country.value,
@@ -99,7 +99,7 @@ export const googleSearchResource: ResourceDefinition = {
 			displayName: 'Results',
 			name: 'results',
 			type: 'options',
-			default: '10',
+			default: '',
 			options: Array.from({ length: 10 }, (_, i) => ({
 				name: `${(i + 1) * 10}`,
 				value: `${(i + 1) * 10}`,

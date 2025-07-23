@@ -1,90 +1,150 @@
-# ScrappingDog Node - Optimized Structure
+# ScrapingDog Node for n8n
 
-This directory contains the optimized ScrappingDog node with a modular structure for better maintainability and extensibility.
+This is a custom n8n node that integrates with the ScrapingDog API, providing web scraping and search capabilities. The node has been converted to use n8n's declarative style for better maintainability and reliability.
+
+## Features
+
+- 🌐 **URL Scraping**: Extract content from any webpage
+- 🔍 **Google Search**: Perform Google searches with advanced options
+- 🔎 **Bing Search**: Search Bing with customizable filters
+- 👥 **LinkedIn Profile**: Scrape LinkedIn profile data
+- 💼 **LinkedIn Jobs**: Search and extract job listings
+- 🛍️ **Amazon Search**: Search products on Amazon
 
 ## Directory Structure
 
 ```
-nodes/ScrappingDog/
-├── ScrappingDog.node.ts      # Main node implementation
-├── ScrappingDog.node.json    # Node metadata
-├── scrappingDog.svg          # Node icon
+nodes/ScrapingDog/
+├── ScrapingDog.node.ts      # Main node implementation (Declarative Style)
+├── ScrapingDog.node.json    # Node metadata
+├── scrappingDog.svg         # Node icon
 ├── types/
-│   └── index.ts              # TypeScript interfaces and types
+│   └── index.ts             # TypeScript interfaces and types
 ├── resources/
-│   ├── index.ts              # Resource exports
-│   ├── scrapeUrl.ts          # Scrape URL resource definition
-│   └── googleSearch.ts       # Google Search resource definition
-└── utils/
-    ├── index.ts              # Utility exports
-    ├── api.ts                # API client class
-    └── nodeDescription.ts    # Node description builder
+│   ├── index.ts             # Resource exports
+│   ├── scrapeUrl.ts         # Scrape URL resource
+│   ├── googleSearch.ts      # Google Search resource
+│   ├── bingSearch.ts        # Bing Search resource
+│   ├── linkedInProfile.ts   # LinkedIn Profile resource
+│   ├── linkedInJob.ts       # LinkedIn Jobs resource
+│   ├── amazonSearch.ts      # Amazon Search resource
+│   └── staticResource.ts    # Static data (countries, etc.)
 ```
 
-## Architecture Overview
+## Recent Updates
 
-### Types (`types/index.ts`)
-Contains all TypeScript interfaces and types used throughout the node:
-- `ScrappingDogCredentials` - API credentials interface
-- `ScrapeUrlParams` - API parameters for URL scraping
-- `GoogleSearchParams` - API parameters for Google search
-- `ScrapeUrlNodeParams` - Node parameters for URL scraping
-- `GoogleSearchNodeParams` - Node parameters for Google search
-- `ResourceType` - Union type for supported resources
-- `OperationType` - Union type for supported operations
+1. **Converted to Declarative Style**
+   - Removed manual HTTP request handling
+   - Added routing configuration for each resource
+   - Improved error handling
+   - Better parameter validation
 
-### Resources (`resources/`)
-Each resource is defined in its own file with:
-- Resource metadata (display name, description, etc.)
-- Parameter definitions with proper display options
-- Parameter builder functions for API calls
+2. **Resource Improvements**
+   - Added proper parameter descriptions
+   - Fixed boolean parameter descriptions to start with "Whether"
+   - Sorted option lists alphabetically
+   - Improved type safety
 
-#### Available Resources:
-1. **Scrape URL** (`scrapeUrl.ts`)
-   - Parameters: URL, dynamic rendering, premium proxy, super proxy, markdown, wait time, country, AI query, AI extract rules
-   - Operations: Get
+3. **API Integration**
+   - Fixed API key handling in requests
+   - Proper HTML content handling for scraping
+   - Improved response processing
 
-2. **Google Search** (`googleSearch.ts`)
-   - Parameters: Keyword, advance search, page, location, results count
-   - Operations: Search
+## Usage Examples
 
-### Utils (`utils/`)
-Utility functions and classes:
-- **API Client** (`api.ts`) - Handles HTTP requests to ScrappingDog API
-- **Node Description Builder** (`nodeDescription.ts`) - Dynamically builds the node description from resources
-
-## Benefits of This Structure
-
-1. **Modularity**: Each resource is self-contained and can be easily modified or extended
-2. **Type Safety**: Strong TypeScript typing throughout the codebase
-3. **Maintainability**: Clear separation of concerns makes the code easier to maintain
-4. **Extensibility**: Adding new resources is straightforward - just create a new resource file
-5. **Reusability**: Common utilities and types can be shared across resources
-6. **Testing**: Each component can be tested independently
-
-## Adding New Resources
-
-To add a new resource:
-
-1. Create a new file in `resources/` (e.g., `newResource.ts`)
-2. Define the resource interface in `types/index.ts`
-3. Add the resource to `resources/index.ts`
-4. Update the main node file to handle the new resource
-5. Update the node description builder if needed
-
-## Example: Adding a New Resource
-
-```typescript
-// resources/newResource.ts
-export const newResourceDefinition = {
-  displayName: 'New Resource',
-  value: 'newResource',
-  // ... other properties
-};
-
-export function buildNewResourceParams(apiKey: string, params: NewResourceParams) {
-  // Build API parameters
+### 1. Scrape URL
+```javascript
+{
+    "resource": "scrapeUrl",
+    "operation": "get",
+    "parameters": {
+        "url": "https://example.com",
+        "dynamic": false,
+        "markdown": false,
+        "premium": false,
+        "superProxy": false,
+        "additionalFields": {
+            "aiQuery": "Extract all product names",
+            "aiExtractRules": "Find prices and descriptions"
+        }
+    }
 }
 ```
 
-This structure makes the codebase much more organized and easier to work with, especially as the number of resources and parameters grows. 
+### 2. Google Search
+```javascript
+{
+    "resource": "googleSearch",
+    "operation": "search",
+    "parameters": {
+        "query": "n8n automation",
+        "advance": true,
+        "page": "1",
+        "location": "US",
+        "results": "10"
+    }
+}
+```
+
+## Resource Parameters
+
+### Scrape URL
+- `url` (Required): Target webpage URL
+- `dynamic`: Whether to enable JavaScript rendering
+- `premium`: Whether to use premium proxy
+- `superProxy`: Whether to enable super proxy
+- `markdown`: Whether to get response in markdown format
+- `wait`: Wait time for dynamic rendering (ms)
+- `country`: Geolocation for the request
+- `aiQuery`: AI-powered data extraction query
+- `aiExtractRules`: Custom extraction rules
+
+### Google Search
+- `query` (Required): Search keyword
+- `advance`: Whether to enable advanced features
+- `page`: Result page number (1-10)
+- `location`: Search location/country
+- `results`: Number of results (10-100)
+
+### LinkedIn Profile
+- `linkId` (Required): Profile ID or URL
+- `private`: Whether the profile is private
+- `type`: Profile or company
+
+### LinkedIn Jobs
+- `type`: job_listings or job_overview
+- `field`: Job field/category
+- `location`: Job location
+- `job_type`: Contract, Full-Time, Part-Time, Temporary, Volunteer
+- `exp_level`: Associate, Director, Entry Level, Internship, Mid Senior Level
+- `work_type`: At Work, Remote, Hybrid
+
+## Development
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Build the node:
+```bash
+npm run build
+```
+
+3. Run with Docker:
+```bash
+make rebuild-and-logs
+```
+
+## Testing
+
+The node includes proper error handling for:
+- Invalid API key
+- Rate limiting
+- Invalid parameters
+- Network errors
+- Blocked requests
+
+## License
+
+MIT License - see LICENSE file for details 

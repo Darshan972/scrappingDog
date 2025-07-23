@@ -50,7 +50,7 @@ export const scrapeUrlResource: ResourceDefinition = {
 			name: 'dynamic',
 			type: 'boolean',
 			default: false,
-			description: 'You can use this parameter for JS rendering',
+			description: 'Whether to use JS rendering',
 			displayOptions: {
 				show: {
 					resource: ['scrapeUrl'],
@@ -63,7 +63,7 @@ export const scrapeUrlResource: ResourceDefinition = {
 			name: 'premium',
 			type: 'boolean',
 			default: false,
-			description: 'When you want to use the premium residential proxy instead of the normal rotating proxy then you can use this parameter',
+			description: 'Whether to use the premium residential proxy instead of the normal rotating proxy',
 			displayOptions: {
 				show: {
 					resource: ['scrapeUrl'],
@@ -76,7 +76,7 @@ export const scrapeUrlResource: ResourceDefinition = {
 			name: 'superProxy',
 			type: 'boolean',
 			default: false,
-			description: 'Enable super proxy',
+			description: 'Whether to enable super proxy',
 			displayOptions: {
 				show: {
 					resource: [
@@ -90,7 +90,7 @@ export const scrapeUrlResource: ResourceDefinition = {
 			name: 'markdown',
 			type: 'boolean',
 			default: false,
-			description: 'This parameter is used to get HTML data in the markdown format.',
+			description: 'Whether to get HTML data in the markdown format',
 			displayOptions: {
 				show: {
 					resource: [
@@ -100,11 +100,11 @@ export const scrapeUrlResource: ResourceDefinition = {
 			},
 		},
 		{
-			displayName: 'Wait (in ms)',
+			displayName: 'Wait (in Ms)',
 			name: 'wait',
 			type: 'number',
 			default: 0,
-			description: 'wait parameter is a time in milliseconds that can be used with the combination of dynamic=true in order to wait and load the website completely.',
+			description: 'Wait parameter is a time in milliseconds that can be used with the combination of dynamic=true in order to wait and load the website completely',
 			displayOptions: {
 				show: {
 					resource: ['scrapeUrl'],
@@ -116,12 +116,12 @@ export const scrapeUrlResource: ResourceDefinition = {
 			displayName: 'Select Country',
 			name: 'country',
 			type: 'options',
-			default: 'us',
+			default: '',
 			options: countries.map(country => ({
 				name: country.name,
 				value: country.value,
 			})),
-			description: 'This parameter helps you access the geotargeting feature.',
+			description: 'This parameter helps you access the geotargeting feature',
 			displayOptions: {
 				show: {
 					premium: [true],
@@ -146,14 +146,14 @@ export const scrapeUrlResource: ResourceDefinition = {
 					name: 'aiQuery',
 					type: 'string',
 					default: '',
-					description: 'This parameter is used to pass the user prompt to get the AI-optimized response.',
+					description: 'This parameter is used to pass the user prompt to get the AI-optimized response',
 				},
 				{
 					displayName: 'AI Extract Rules',
 					name: 'aiExtractRules',
 					type: 'string',
 					default: '',
-					description: 'This parameter is used to extract data from pages without parsing the HTML yourself, you can include AI extraction rules in your API request.',
+					description: 'This parameter is used to extract data from pages without parsing the HTML yourself, you can include AI extraction rules in your API request',
 				},
 			]
 		},
