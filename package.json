@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-scraping-dog",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "A custom n8n node for integrating with ScrapingDog to perform web scraping tasks.",
   "keywords": [
     "n8n",
