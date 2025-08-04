@@ -1,7 +1,6 @@
 import {
 	INodeType,
 	INodeTypeDescription,
-	NodeConnectionType,
 } from 'n8n-workflow';
 
 import {
@@ -25,8 +24,8 @@ export class ScrapingDog implements INodeType {
 		defaults: {
 			name: 'Scraping Dog API',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.Main],
+		inputs: ['main'],
+		outputs: ['main'],
 		credentials: [
 			{
 				name: 'scrapingDogApi',
@@ -93,14 +92,15 @@ export class ScrapingDog implements INodeType {
 						qs: {
 							api_key: '={{$credentials.apiKey}}',
 							url: '={{$parameter["url"]}}',
-							dynamic: '={{$parameter["dynamic"]}}',
-							markdown: '={{$parameter["markdown"]}}',
-							premium: '={{$parameter["premium"]}}',
+							dynamic: '={{$parameter["dynamic"] === true ? "true" : "false"}}',
 							wait: '={{$parameter["wait"]}}',
 							country: '={{$parameter["country"]}}',
-							superProxy: '={{$parameter["superProxy"]}}',
-							ai_query: '={{$parameter.additionalFields?.aiQuery}}',
-							ai_extract_rules: '={{$parameter.additionalFields?.aiExtractRules}}',
+							image: '={{$parameter["images"] === true ? "true" : "false"}}',
+							markdown: '={{$parameter["markdown"] === true ? "true" : "false"}}',
+							ai_query: '={{$parameter["aiQuery"]}}',
+							ai_extract_rules: '={{$parameter["aiExtractRules"]}}',
+							premium: '={{$parameter["premium"] === true ? "true" : "false"}}',
+							super_proxy: '={{$parameter["superProxy"] === true ? "true" : "false"}}',
 						},
 						returnFullResponse: true,
 					},
