@@ -157,6 +157,42 @@ export const scrapeUrlResource: ResourceDefinition = {
 				},
 			]
 		},
+		{
+			displayName: 'Custom Headers',
+			name: 'customHeaders',
+			type: 'boolean',
+			default: false,
+			description: 'When you set custom_header=true our server allows you to pass your own headers',
+			displayOptions: {
+				show: {
+					resource: ['scrapeUrl'],
+				},
+			},
+		},
+		{
+			displayName: 'Session Number',
+			name: 'sessionNumber',
+			type: 'string',
+			default: '',
+			description: 'You can use this parameter if you want to reuse the same proxy for multiple requests. You can set any string value to session_number while making the request',
+			displayOptions: {
+				show: {
+					resource: ['scrapeUrl'],
+				},
+			},
+		},
+		{
+			displayName: 'Scrape Images',
+			name: 'image',
+			type: 'boolean',
+			default: false,
+			description: 'You can use this parameter if you want to scrape image URLs',
+			displayOptions: {
+				show: {
+					resource: ['scrapeUrl'],
+				},
+			},
+		},
 	],
 };
 

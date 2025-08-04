@@ -17,6 +17,9 @@ export interface ScrapeUrlApiParams extends BaseApiParams {
 	markdown?: string;
 	wait?: string;
 	country?: string;
+	custom_headers?: string;
+	session_number?: string;
+	image?: string;
 	ai_query?: string;
 	ai_extract_rules?: string;
 }
@@ -29,6 +32,9 @@ export interface ScrapeUrlNodeParams {
 	markdown?: boolean;
 	wait?: number;
 	country?: string;
+	customHeaders?: boolean;
+	sessionNumber?: string;
+	image?: boolean;
 	additionalFields?: {
 		aiQuery?: string;
 		aiExtractRules?: string;
