@@ -2,6 +2,8 @@ import {
 	INodeType,
 	INodeTypeDescription,
 	NodeConnectionType,
+	IExecuteSingleFunctions,
+	IHttpRequestOptions,
 } from 'n8n-workflow';
 
 import {
@@ -93,17 +95,62 @@ export class ScrapingDog implements INodeType {
 						qs: {
 							api_key: '={{$credentials.apiKey}}',
 							url: '={{$parameter["url"]}}',
-							dynamic: '={{$parameter["dynamic"]}}',
-							markdown: '={{$parameter["markdown"]}}',
-							premium: '={{$parameter["premium"]}}',
-							wait: '={{$parameter["wait"]}}',
-							country: '={{$parameter["country"]}}',
-							superProxy: '={{$parameter["superProxy"]}}',
-							ai_query: '={{$parameter.additionalFields?.aiQuery}}',
-							ai_extract_rules: '={{$parameter.additionalFields?.aiExtractRules}}',
+							dynamic: '={{$parameter["dynamic"] ? "true" : "false"}}',
 						},
 						returnFullResponse: true,
 					},
+					send: {
+					preSend: [
+							function(this: IExecuteSingleFunctions,
+								requestOptions: IHttpRequestOptions) {
+								// Build query string dynamically based on parameter presence
+								const qs = requestOptions.qs || {};
+								
+								// Only add markdown if it's explicitly set to true
+								const markdown = this.getNodeParameter('markdown', 0) as boolean;
+								if (markdown) {
+									qs.markdown = 'true';
+								}
+								
+								// Only add premium if it's explicitly set to true
+								const premium = this.getNodeParameter('premium', 0) as boolean;
+								if (premium) {
+									qs.premium = 'true';
+								}
+								
+								// Only add wait if it has a value and is greater than 0
+								const wait = this.getNodeParameter('wait', 0) as string;
+								if (wait && wait.toString().trim() !== '' && parseInt(wait.toString()) > 0) {
+									qs.wait = wait;
+								}
+								
+								// Only add country if it has a non-empty value
+								const country = this.getNodeParameter('country', 0) as string;
+								if (country && typeof country === 'string' && country.trim() !== '') {
+									qs.country = country;
+								}
+								
+								// Only add superProxy if it's explicitly set to true
+								const superProxy = this.getNodeParameter('superProxy', 0) as boolean;
+								if (superProxy) {
+									qs.superProxy = 'true';
+								}
+								
+								// Only add AI parameters if they have values
+								const additionalFields = this.getNodeParameter('additionalFields', 0) as any;
+								if (additionalFields?.aiQuery && typeof additionalFields.aiQuery === 'string' && additionalFields.aiQuery.trim() !== '') {
+									qs.ai_query = additionalFields.aiQuery;
+								}
+								
+								if (additionalFields?.aiExtractRules && typeof additionalFields.aiExtractRules === 'string' && additionalFields.aiExtractRules.trim() !== '') {
+									qs.ai_extract_rules = additionalFields.aiExtractRules;
+								}
+								console.log(qs);
+								requestOptions.qs = qs;
+								return requestOptions;
+							}
+						]
+					} 
 				},
 			},
 			{
