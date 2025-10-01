@@ -111,6 +111,7 @@ export class ScrapingDog implements INodeType {
 						},
 						returnFullResponse: true,
 					},
+					returnFullResponse: true,
 				},
 			},
 			{
