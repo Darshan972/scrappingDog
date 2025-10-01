@@ -61,6 +61,32 @@ export interface GoogleSearchNodeParams {
 	results?: number;
 }
 
+export interface GoogleImagesApiParams extends BaseApiParams {
+	query: string;
+	results?: string;
+	country?: string;
+	language?: string;
+	image_size?: string;
+	image_type?: string;
+	image_color?: string;
+	usage_rights?: string;
+	time_period?: string;
+	safe_search?: string;
+}
+
+export interface GoogleImagesNodeParams {
+	query: string;
+	results?: string;
+	country?: string;
+	language?: string;
+	imageSize?: string;
+	imageType?: string;
+	imageColor?: string;
+	usageRights?: string;
+	timePeriod?: string;
+	safeSearch?: string;
+}
+
 export interface BingSearchApiParams extends SearchApiParams {
 	filters?: string;
 }
@@ -128,7 +154,8 @@ export interface AmazonSearchNodeParams {
 // Resource and operation types
 export type ResourceType = 
 	| 'scrapeUrl' 
-	| 'googleSearch' 
+	| 'googleSearch'
+	| 'googleImages'
 	| 'bingSearch' 
 	| 'linkedInProfile' 
 	| 'linkedInJob' 

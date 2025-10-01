@@ -6,6 +6,7 @@ import {
 import {
 	scrapeUrlResource,
 	googleSearchResource,
+	googleImagesResource,
 	bingSearchResource,
 	linkedInProfileResource,
 	linkedInJobResource,
@@ -54,6 +55,10 @@ export class ScrapingDog implements INodeType {
 					{
 						name: googleSearchResource.displayName,
 						value: googleSearchResource.value,
+					},
+					{
+						name: googleImagesResource.displayName,
+						value: googleImagesResource.value,
 					},
 					{
 						name: bingSearchResource.displayName,
@@ -131,6 +136,38 @@ export class ScrapingDog implements INodeType {
 							page: '={{$parameter["page"]}}',
 							country: '={{$parameter["location"]}}',
 							results: '={{$parameter["results"]}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: '',
+				displayOptions: {
+					show: {
+						resource: [googleImagesResource.value],
+					},
+				},
+				options: googleImagesResource.operations[0].options,
+				routing: {
+					request: {
+						method: 'GET',
+						url: 'google_images',
+						qs: {
+							api_key: '={{$credentials.apiKey}}',
+							query: '={{$parameter["query"]}}',
+							results: '={{$parameter["results"]}}',
+							country: '={{$parameter["country"] || undefined}}',
+							language: '={{$parameter["language"] || undefined}}',
+							image_size: '={{$parameter["imageSize"] || undefined}}',
+							image_type: '={{$parameter["imageType"] || undefined}}',
+							image_color: '={{$parameter["imageColor"] || undefined}}',
+							usage_rights: '={{$parameter["usageRights"] || undefined}}',
+							time_period: '={{$parameter["timePeriod"] || undefined}}',
+							safe_search: '={{$parameter["safeSearch"] || undefined}}',
 						},
 					},
 				},
@@ -248,6 +285,7 @@ export class ScrapingDog implements INodeType {
 			// Parameters from resources
 			...scrapeUrlResource.parameters,
 			...googleSearchResource.parameters,
+			...googleImagesResource.parameters,
 			...bingSearchResource.parameters,
 			...linkedInProfileResource.parameters,
 			...linkedInJobResource.parameters,
