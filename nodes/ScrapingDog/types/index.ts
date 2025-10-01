@@ -66,11 +66,11 @@ export interface GoogleImagesApiParams extends BaseApiParams {
 	results?: string;
 	country?: string;
 	language?: string;
-	image_size?: string;
+	imgsz?: string;
 	image_type?: string;
 	image_color?: string;
-	usage_rights?: string;
-	time_period?: string;
+	licenses?: string;
+	tbs?: string;
 	safe_search?: string;
 }
 

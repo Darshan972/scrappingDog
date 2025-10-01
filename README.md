@@ -6,7 +6,8 @@ This is a custom n8n node that integrates with the ScrapingDog API, providing we
 
 - 🌐 **URL Scraping**: Extract content from any webpage
 - 🔍 **Google Search**: Perform Google searches with advanced options
-- 🔎 **Bing Search**: Search Bing with customizable filters
+- �️ **Google Images**: Search Google Images with advanced filtering options
+- �🔎 **Bing Search**: Search Bing with customizable filters
 - 👥 **LinkedIn Profile**: Scrape LinkedIn profile data
 - 💼 **LinkedIn Jobs**: Search and extract job listings
 - 🛍️ **Amazon Search**: Search products on Amazon
@@ -24,6 +25,7 @@ nodes/ScrapingDog/
 │   ├── index.ts             # Resource exports
 │   ├── scrapeUrl.ts         # Scrape URL resource
 │   ├── googleSearch.ts      # Google Search resource
+│   ├── googleImages.ts      # Google Images resource
 │   ├── bingSearch.ts        # Bing Search resource
 │   ├── linkedInProfile.ts   # LinkedIn Profile resource
 │   ├── linkedInJob.ts       # LinkedIn Jobs resource
@@ -33,6 +35,14 @@ nodes/ScrapingDog/
 
 ## Recent Updates
 
+### Version 0.4.0 - Google Images API Integration
+- 🖼️ **NEW: Google Images Search** - Added comprehensive Google Images API support
+- **Advanced Image Filtering**: Size, type, color, usage rights, time period filters
+- **Multi-language Support**: 13 different languages for search results
+- **Safe Search Controls**: Strict, moderate, or off filtering options
+- **Geographic Targeting**: Country-specific image search results
+
+### Previous Updates
 1. **Converted to Declarative Style**
    - Removed manual HTTP request handling
    - Added routing configuration for each resource
@@ -86,6 +96,26 @@ nodes/ScrapingDog/
 }
 ```
 
+### 3. Google Images
+```javascript
+{
+    "resource": "googleImages",
+    "operation": "search",
+    "parameters": {
+        "query": "sunset landscape",
+        "results": "20",
+        "country": "US",
+        "language": "en",
+        "imgsz": "l",
+        "imageType": "photo",
+        "imageColor": "bw",
+        "licenses": "f",
+        "tbs": "qdr:d",
+        "safe": "1"
+    }
+}
+```
+
 ## Resource Parameters
 
 ### Scrape URL
@@ -106,6 +136,18 @@ nodes/ScrapingDog/
 - `location`: Search location/country
 - `results`: Number of results (10-100)
 
+### Google Images
+- `query` (Required): Search keyword for images
+- `results`: Number of results (10-100)
+- `country`: Country for geotargeting (US, UK, CA, etc.)
+- `language`: Search language (en, es, fr, de, etc.)
+- `imgsz`: Filter by size (any, large, medium, icon)
+- `imageType`: Filter by type (any, face, photo, clipart, lineart, animated)
+- `imageColor`: Filter by color (any, color, gray, trans, red, orange, yellow, green, teal, blue, purple, pink, white, black, brown)
+- `licenses`: Filter by usage rights (any, labeled-for-reuse, labeled-for-reuse-with-modification, etc.)
+- `tbs`: Filter by time (any, hour, day, week, month, year)
+- `safe`: Safe search level (strict, moderate, off)
+
 ### LinkedIn Profile
 - `linkId` (Required): Profile ID or URL
 - `private`: Whether the profile is private
@@ -118,6 +160,31 @@ nodes/ScrapingDog/
 - `job_type`: Contract, Full-Time, Part-Time, Temporary, Volunteer
 - `exp_level`: Associate, Director, Entry Level, Internship, Mid Senior Level
 - `work_type`: At Work, Remote, Hybrid
+
+## API Response Examples
+
+### Google Images Response
+```json
+{
+  "time_taken": 685.692823,
+  "ads": [],
+  "images_results": [
+    {
+      "title": "Beautiful Sunset Landscape",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:...",
+      "source": "example.com",
+      "original": "https://example.com/images/sunset.jpg",
+      "link": "https://example.com/sunset-photography",
+      "original_height": 1080,
+      "original_width": 1920,
+      "original_size": "245KB",
+      "know_more_link": "https://www.google.com/search/about-this-image?...",
+      "is_product": false,
+      "rank": 1
+    }
+  ]
+}
+```
 
 ## Development
 
