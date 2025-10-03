@@ -87,6 +87,37 @@ export interface GoogleImagesNodeParams {
 	safeSearch?: string;
 }
 
+export interface GoogleNewsApiParams extends BaseApiParams {
+	query: string;
+	results?: string;
+	country?: string;
+	page?: string;
+	domain?: string;
+	language?: string;
+	lr?: string;
+	uule?: string;
+	tbs?: string;
+	safe?: string;
+	nfpr?: string;
+}
+
+export interface GoogleNewsNodeParams {
+	query: string;
+	results?: string;
+	additionalFields?: {
+		country?: string;
+		customCountry?: string;
+		page?: number;
+		domain?: string;
+		language?: string;
+		lr?: string;
+		uule?: string;
+		tbs?: string;
+		safe?: string;
+		nfpr?: boolean;
+	};
+}
+
 export interface BingSearchApiParams extends SearchApiParams {
 	filters?: string;
 }
@@ -97,44 +128,6 @@ export interface BingSearchNodeParams {
 	country?: string;
 	filters?: string;
 	results?: number;
-}
-
-// LinkedIn types
-export interface LinkedInProfileApiParams extends BaseApiParams {
-	linkId: string;
-	private?: string;
-	type?: string;
-}
-
-export interface LinkedInProfileNodeParams {
-	linkId: string;
-	private?: boolean;
-	type?: string;
-}
-
-export interface LinkedInJobApiParams extends BaseApiParams {
-	job_id?: string;
-	field?: string;
-	geoid?: string;
-	location?: string;
-	page?: string;
-	sort_by?: string;
-	job_type?: string;
-	exp_level?: string;
-	work_type?: string;
-}
-
-export interface LinkedInJobNodeParams {
-	type: 'job_overview' | 'job_listings';
-	job_id?: string;
-	field?: string;
-	geoid?: string;
-	location?: string;
-	page?: number;
-	sort_by?: string;
-	job_type?: string;
-	exp_level?: string;
-	work_type?: string;
 }
 
 // Amazon types
@@ -156,9 +149,8 @@ export type ResourceType =
 	| 'scrapeUrl' 
 	| 'googleSearch'
 	| 'googleImages'
+	| 'googleNews'
 	| 'bingSearch' 
-	| 'linkedInProfile' 
-	| 'linkedInJob' 
 	| 'amazonSearch';
 
 export type OperationType = 'get' | 'search';

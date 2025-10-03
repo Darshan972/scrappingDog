@@ -7,9 +7,8 @@ import {
 	scrapeUrlResource,
 	googleSearchResource,
 	googleImagesResource,
+	googleNewsResource,
 	bingSearchResource,
-	linkedInProfileResource,
-	linkedInJobResource,
 	amazonSearchResource,
 } from './resources';
 
@@ -61,16 +60,12 @@ export class ScrapingDog implements INodeType {
 						value: googleImagesResource.value,
 					},
 					{
+						name: googleNewsResource.displayName,
+						value: googleNewsResource.value,
+					},
+					{
 						name: bingSearchResource.displayName,
 						value: bingSearchResource.value,
-					},
-					{
-						name: linkedInProfileResource.displayName,
-						value: linkedInProfileResource.value,
-					},
-					{
-						name: linkedInJobResource.displayName,
-						value: linkedInJobResource.value,
 					},
 					{
 						name: amazonSearchResource.displayName,
@@ -181,6 +176,39 @@ export class ScrapingDog implements INodeType {
 				default: '',
 				displayOptions: {
 					show: {
+						resource: [googleNewsResource.value],
+					},
+				},
+				options: googleNewsResource.operations[0].options,
+				routing: {
+					request: {
+						method: 'GET',
+						url: 'google_news',
+						qs: {
+							api_key: '={{$credentials.apiKey}}',
+							query: '={{$parameter["query"]}}',
+							results: '={{$parameter["results"]}}',
+							country: '={{$parameter["additionalFields"] && $parameter["additionalFields"]["country"] === "custom" ? $parameter["additionalFields"]["customCountry"] : $parameter["additionalFields"]["country"] || undefined}}',
+							page: '={{$parameter["additionalFields"] && $parameter["additionalFields"]["page"] || undefined}}',
+							domain: '={{$parameter["additionalFields"] && $parameter["additionalFields"]["domain"] || undefined}}',
+							language: '={{$parameter["additionalFields"] && $parameter["additionalFields"]["language"] || undefined}}',
+							lr: '={{$parameter["additionalFields"] && $parameter["additionalFields"]["lr"] || undefined}}',
+							uule: '={{$parameter["additionalFields"] && $parameter["additionalFields"]["uule"] || undefined}}',
+							tbs: '={{$parameter["additionalFields"] && $parameter["additionalFields"]["tbs"] || undefined}}',
+							safe: '={{$parameter["additionalFields"] && $parameter["additionalFields"]["safe"] || undefined}}',
+							nfpr: '={{$parameter["additionalFields"] && $parameter["additionalFields"]["nfpr"] === true ? "1" : "0"}}',
+						},
+					},
+				},
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: '',
+				displayOptions: {
+					show: {
 						resource: [bingSearchResource.value],
 					},
 				},
@@ -196,62 +224,6 @@ export class ScrapingDog implements INodeType {
 							country: '={{$parameter["country"]}}',
 							filters: '={{$parameter["filters"]}}',
 							results: '={{$parameter["results"]}}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				default: '',
-				displayOptions: {
-					show: {
-						resource: [linkedInProfileResource.value],
-					},
-				},
-				options: linkedInProfileResource.operations[0].options,
-				routing: {
-					request: {
-						method: 'GET',
-						url: 'linkedin',
-						qs: {
-							api_key: '={{$credentials.apiKey}}',
-							linkId: '={{$parameter["linkId"].split("/").filter(Boolean).pop() || $parameter["linkId"]}}',
-							private: '={{$parameter["private"]}}',
-							type: '={{$parameter["type"]}}',
-						},
-					},
-				},
-			},
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				default: '',
-				displayOptions: {
-					show: {
-						resource: [linkedInJobResource.value],
-					},
-				},
-				options: linkedInJobResource.operations[0].options,
-				routing: {
-					request: {
-						method: 'GET',
-						url: 'linkedinjobs',
-						qs: {
-							api_key: '={{$credentials.apiKey}}',
-							job_id: '={{$parameter["type"] === "job_overview" ? $parameter["job_id"] : undefined}}',
-							field: '={{$parameter["type"] === "job_listings" ? $parameter["field"] : undefined}}',
-							geoid: '={{$parameter["type"] === "job_listings" ? $parameter["geoid"] : undefined}}',
-							location: '={{$parameter["type"] === "job_listings" ? $parameter["location"] : undefined}}',
-							page: '={{$parameter["type"] === "job_listings" ? $parameter["page"] : undefined}}',
-							sort_by: '={{$parameter["type"] === "job_listings" ? $parameter["sort_by"] : undefined}}',
-							job_type: '={{$parameter["type"] === "job_listings" ? $parameter["job_type"] : undefined}}',
-							exp_level: '={{$parameter["type"] === "job_listings" ? $parameter["exp_level"] : undefined}}',
-							work_type: '={{$parameter["type"] === "job_listings" ? $parameter["work_type"] : undefined}}',
 						},
 					},
 				},
@@ -287,9 +259,8 @@ export class ScrapingDog implements INodeType {
 			...scrapeUrlResource.parameters,
 			...googleSearchResource.parameters,
 			...googleImagesResource.parameters,
+			...googleNewsResource.parameters,
 			...bingSearchResource.parameters,
-			...linkedInProfileResource.parameters,
-			...linkedInJobResource.parameters,
 			...amazonSearchResource.parameters,
 		],
 	};
